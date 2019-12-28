@@ -1,7 +1,24 @@
 # PLUGINS
 
-**This directory is not required, you can delete it if you don't want to use it.**
+create your own `firebase.js`
 
-This directory contains Javascript plugins that you want to run before mounting the root Vue.js application.
+```
+import firebase from 'firebase'
 
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/guide/plugins).
+if (!firebase.apps.length) {
+    const firebaseConfig = {
+        apiKey: "xxx",
+        authDomain: "xxx",
+        databaseURL: "xxx",
+        projectId: "xxx",
+        storageBucket: "xxx",
+        messagingSenderId: "xxx",
+        appId: "xxx",
+        measurementId: "xxx"
+    };
+    firebase.initializeApp(firebaseConfig)
+}
+
+export default firebase
+
+```
