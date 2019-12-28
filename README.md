@@ -1,22 +1,17 @@
 # chika
 
-> My sweet Nuxt.js project
+Chika is invincible Japanese Shiritori Machine.
 
-## Build Setup
+<image>
 
-``` bash
-# install dependencies
-$ yarn install
 
-# serve with hot reload at localhost:3000
-$ yarn dev
+## How to play
 
-# build for production and launch server
-$ yarn build
-$ yarn start
+1. Login by SNS Account.
+2. Say somw word.
+3. Chika will reply your.
+4. Infinitly continue 2=>3 !
 
-# generate static project
-$ yarn generate
-```
+## Whay play with Chika?
 
-For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
+To increase the vocabulary is the base of communication. So Chika aims to promote communication by newly words. To realize this world, the vocabulary of Chika is not from boring Wikipedia, but also [Aozora Bunko](https://www.aozora.gr.jp/). You can know not only the word but also its usage in literature.
