@@ -58,16 +58,16 @@ export default {
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
     theme: {
-      dark: true,
       themes: {
-        dark: {
-          primary: colors.blue.darken2,
-          accent: colors.grey.darken3,
-          secondary: colors.amber.darken3,
-          info: colors.teal.lighten1,
-          warning: colors.amber.base,
-          error: colors.deepOrange.accent4,
-          success: colors.green.accent3
+        light: true,
+        light: {
+          primary: '#196CD2',
+          accent: '#F9A024',
+          secondary: '#70D4F6',
+          success: '#4CAF50',
+          info: '#2196F3',
+          warning: '#FB8C00',
+          error: '#FF5252'
         }
       }
     }
@@ -79,6 +79,16 @@ export default {
     /*
      ** You can extend webpack config here
      */
-    extend(config, ctx) {}
+    extend(config, ctx) {
+      if (ctx.isDev && ctx.isClient) {
+        config.devtool = 'inline-cheap-module-source-map'
+        config.module.rules.push({
+          enforce: 'pre',
+          test: /\.(js|vue)$/,
+          loader: 'eslint-loader',
+          exclude: /(node_modules)/
+        })
+      }
+    }
   }
 }
