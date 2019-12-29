@@ -42,12 +42,6 @@ export const actions = {
       } else {
         console.log('Empty!')
       }
-      /*
-          commit('addReply', {
-            "id": 1,
-            "text": "huga"
-          })
-          */
     } catch (e) {
       console.log(e)
     }
