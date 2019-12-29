@@ -90,3 +90,4 @@ sw.*
 *.swp
 /plugins/firebase.js
 .firebase/
+venv/
