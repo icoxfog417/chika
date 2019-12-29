@@ -1,5 +1,6 @@
 import os
 import unicodedata
+import random
 from urllib.parse import urljoin
 import requests
 import pandas as pd
@@ -138,7 +139,7 @@ def get_words(file_name):
     token_filters = [CompoundNounFilter()]
     analyzer = Analyzer(tokenizer=tokenizer, token_filters=token_filters)
 
-    words = []
+    words = {}
     for s in tqdm(sections):
         sentences = s.split("。")
         for x in sentences:
@@ -146,6 +147,8 @@ def get_words(file_name):
             if _x and len(_x) > 10:
                 for token in analyzer.analyze(_x):
                     pos = token.part_of_speech.split(",")
+                    if token.surface.endswith("ン"):
+                        continue
                     if not pos[0].startswith("名詞"):
                         continue
                     if pos[1] not in ["一般", "複合"]:
@@ -164,7 +167,9 @@ def get_words(file_name):
                         "word": token.surface,
                         "context": _x
                     }
-                    words.append(word)
+                    if word["prefix"] not in words:
+                        words[word["prefix"]] = []
+                    words[word["prefix"]].append(word)
 
     return words
 
@@ -173,19 +178,38 @@ if __name__ == "__main__":
     ranking_2019_04 = "https://www.aozora.gr.jp/access_ranking/2019_04_xhtml.html"
     link_list = get_list(ranking_2019_04)
     word_all = {}
+    trial_count = 10
     for i, row in link_list.iterrows():
         name = download_literature(row)
-        print(name)
-        if name:
-            words = get_words(name)
-            for w in words:
-                if w["word"] not in word_all:
-                    word_all[w["word"]] = w
+        if not name:
+            continue
+
+        registered = 0
+        words = get_words(name)
+        for k in words:
+            if k not in word_all:
+                word_all[k] = {}
+
+            for t in range(trial_count):
+                w = random.choice(words[k])
+                if w["word"] not in word_all[k]:
+                    word_all[k][w["word"]] = w
+                    registered += 1
+                    break
+
+        print(f"{registered} words are registered from {row['title']})")
+
         if i > 1:
             break
 
-    for i, k in enumerate(word_all):
-        w = word_all[k]
-        print(f"{w['word']} \t {w['reading']} \t {w['context']}")
-        if i > 99:
-            break
+    word_list = []
+    for p in word_all:
+        index = 0
+        for w in word_all[p]:
+            _w = word_all[p][w]
+            _w["index"] = f"{ord(p)}_{index}"
+            word_list.append(_w)
+            index += 1
+
+    word_list = pd.DataFrame(word_list)
+    word_list.to_csv("word_list.csv", index=False)

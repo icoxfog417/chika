@@ -1,6 +1,9 @@
 const functions = require('firebase-functions')
+const admin = require('firebase-admin')
 const http = require('request')
 require('dotenv').config()
+admin.initializeApp()
+const firestore = admin.firestore()
 
 exports.validateSpeech = functions.https.onRequest((request, response) => {
   let appId = ''
@@ -76,4 +79,18 @@ exports.validateSpeech = functions.https.onRequest((request, response) => {
       }
     }
   )
+})
+
+exports.import_data = functions.https.onRequest((request, response) => {
+  const body = request.body.body
+  const item = JSON.parse(body)
+  const index = item.index
+  delete item['index']
+  console.log(index)
+  console.log(item)
+
+  firestore
+    .collection('words')
+    .doc(index)
+    .set(item)
 })
