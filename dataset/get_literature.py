@@ -113,8 +113,8 @@ def get_words(file_name):
     def get_meta(name):
         return xml.find("meta", attrs={"name": name}).attrs["content"]
 
-    author = get_meta("DC.Title")
-    title = get_meta("DC.Creator")
+    author = get_meta("DC.Creator")
+    title = get_meta("DC.Title")
     url = get_meta("DC.Link")
 
     # erase ruby
@@ -147,7 +147,7 @@ def get_words(file_name):
             if _x and len(_x) > 10:
                 for token in analyzer.analyze(_x):
                     pos = token.part_of_speech.split(",")
-                    if token.surface.endswith("ン"):
+                    if token.reading.endswith("ン"):
                         continue
                     if not pos[0].startswith("名詞"):
                         continue
@@ -185,22 +185,23 @@ if __name__ == "__main__":
             continue
 
         registered = 0
-        words = get_words(name)
-        for k in words:
-            if k not in word_all:
-                word_all[k] = {}
+        try:
+            words = get_words(name)
+            for k in words:
+                if k not in word_all:
+                    word_all[k] = {}
 
-            for t in range(trial_count):
-                w = random.choice(words[k])
-                if w["word"] not in word_all[k]:
-                    word_all[k][w["word"]] = w
-                    registered += 1
-                    break
+                for t in range(trial_count):
+                    w = random.choice(words[k])
+                    if w["word"] not in word_all[k]:
+                        word_all[k][w["word"]] = w
+                        registered += 1
+                        break
+        except Exception as ex:
+            print(ex)
+            continue
 
         print(f"{registered} words are registered from {row['title']})")
-
-        if i > 1:
-            break
 
     word_list = []
     for p in word_all:

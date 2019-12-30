@@ -91,3 +91,5 @@ sw.*
 /plugins/firebase.js
 .firebase/
 venv/
+word_list.csv
+
